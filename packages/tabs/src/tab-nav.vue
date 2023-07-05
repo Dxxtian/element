@@ -80,37 +80,47 @@
         this.navOffset = newOffset;
       },
       scrollToActiveTab() {
-        if (!this.scrollable) return;
-        const nav = this.$refs.nav;
-        const activeTab = this.$el.querySelector('.is-active');
-        if (!activeTab) return;
-        const navScroll = this.$refs.navScroll;
-        const isHorizontal = ['top', 'bottom'].indexOf(this.rootTabs.tabPosition) !== -1;
-        const activeTabBounding = activeTab.getBoundingClientRect();
-        const navScrollBounding = navScroll.getBoundingClientRect();
-        const maxOffset = isHorizontal
-          ? nav.offsetWidth - navScrollBounding.width
-          : nav.offsetHeight - navScrollBounding.height;
-        const currentOffset = this.navOffset;
-        let newOffset = currentOffset;
+        // 是否可以滚动
+    if (!this.scrollable) return;
+    // 获取 tab-pane 容器 节点
+    let nav = this.$refs.nav;
+    // 获取当前选中的 tab-pane 节点
+    let activeTab = this.$el.querySelector(".is-active");
+    if (!activeTab) return;
+    // 判断当前 tabs 是纵向排列 还是 水平排列
+    const isHorizontal = ["top", "bottom"].indexOf(this.rootTabs.tabPosition) !== -1;
+    // 获取 nav 节点的可视区域元素 节点
+    let navScroll = this.$refs.navScroll;
+    // 当前选中元素的 大小及其相对于视口的位置。
+    let activeTabBounding = activeTab.getBoundingClientRect();
+    // nav可视区域元素的 大小及其相对于视口的位置。
+    let navScrollBounding = navScroll.getBoundingClientRect();
+    // 获取可偏移的最大值
+    let maxOffset = isHorizontal
+        ? nav.offsetWidth - navScrollBounding.width
+        : nav.offsetHeight - navScrollBounding.height;
+    // 当前的偏移量
+    let currentOffset = this.navOffset;
+    let newOffset = currentOffset;
 
-        if (isHorizontal) {
-          if (activeTabBounding.left < navScrollBounding.left) {
+    if (isHorizontal) {
+        if (activeTabBounding.left < navScrollBounding.left) {
             newOffset = currentOffset - (navScrollBounding.left - activeTabBounding.left);
-          }
-          if (activeTabBounding.right > navScrollBounding.right) {
-            newOffset = currentOffset + activeTabBounding.right - navScrollBounding.right;
-          }
-        } else {
-          if (activeTabBounding.top < navScrollBounding.top) {
-            newOffset = currentOffset - (navScrollBounding.top - activeTabBounding.top);
-          }
-          if (activeTabBounding.bottom > navScrollBounding.bottom) {
-            newOffset = currentOffset + (activeTabBounding.bottom - navScrollBounding.bottom);
-          }
         }
-        newOffset = Math.max(newOffset, 0);
-        this.navOffset = Math.min(newOffset, maxOffset);
+        if (activeTabBounding.right > navScrollBounding.right) {
+            newOffset = currentOffset + activeTabBounding.right - navScrollBounding.right;
+        }
+    } else {
+        if (activeTabBounding.top < navScrollBounding.top) {
+            newOffset = currentOffset - (navScrollBounding.top - activeTabBounding.top);
+        }
+        if (activeTabBounding.bottom > navScrollBounding.bottom) {
+            newOffset = currentOffset + (activeTabBounding.bottom - navScrollBounding.bottom);
+        }
+    }
+
+    newOffset = Math.max(newOffset, 0);
+    this.navOffset = Math.min(newOffset, maxOffset);
       },
       update() {
         if (!this.$refs.nav) return;
