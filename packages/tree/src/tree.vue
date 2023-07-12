@@ -429,8 +429,8 @@
         } else if (dropType === 'after') {
           indicatorTop = iconPosition.bottom - treePosition.top;
         }
-        dropIndicator.style.top = indicatorTop + 'px';
-        dropIndicator.style.left = (iconPosition.right - treePosition.left) + 'px';
+        dropIndicator.style.top = indicatorTop + 'px' + this.$el.scrollTop;
+        dropIndicator.style.left = (iconPosition.right - treePosition.left) + 'px' + this.$el.scrollTop;
 
         if (dropType === 'inner') {
           addClass(dropNode.$el, 'is-drop-inner');
